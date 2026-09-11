@@ -8,9 +8,23 @@ export function CartProvider({ children }) {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
   useEffect(() => {
     localStorage.setItem('shopzone_cart', JSON.stringify(cart));
   }, [cart]);
+
+  const login = () => {
+    localStorage.setItem('isLoggedIn', 'true');
+    setIsLoggedIn(true);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+  };
 
   const addToCart = (product) => {
     setCart((prevCart) => {
@@ -32,6 +46,7 @@ export function CartProvider({ children }) {
       )
     );
   };
+
   const decreaseQuantity = (id) => {
     setCart((prevCart) =>
       prevCart
@@ -42,13 +57,21 @@ export function CartProvider({ children }) {
     );
   };
 
-
   const removeFromCart = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, increaseQuantity, decreaseQuantity, removeFromCart }}>
+    <CartContext.Provider value={{ 
+      cart, 
+      addToCart, 
+      increaseQuantity, 
+      decreaseQuantity, 
+      removeFromCart,
+      isLoggedIn,
+      login,
+      logout
+    }}>
       {children}
     </CartContext.Provider>
   );

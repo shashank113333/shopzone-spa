@@ -11,22 +11,20 @@ import Login from './pages/Login';
 import Checkout from './pages/Checkout';
 
 function PrivateRoute({ children }) {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const { isLoggedIn } = useContext(CartContext);
   return isLoggedIn ? children : <Navigate to="/login" />;
 }
 
 function App() {
-  const { cart } = useContext(CartContext);
+  const { cart, isLoggedIn, logout } = useContext(CartContext);
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    alert('Logged out!');
-    window.location.reload(); 
+    logout();
+    alert('Logged out successfully!');
   };
 
   return (
     <BrowserRouter>
-
       <nav style={{ 
         padding: '12px 20px', 
         background: '#333', 
@@ -48,10 +46,10 @@ function App() {
             🛒 Cart ({cart.length})
           </Link>
 
-          {localStorage.getItem('isLoggedIn') === 'true' ? (
-             <button onClick={handleLogout} style={{ background: 'red', color: 'white', border: 'none', padding: '6px 12px', cursor: 'pointer', borderRadius: '4px' }}>Logout</button>
+          {isLoggedIn ? (
+             <button onClick={handleLogout} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '6px 14px', cursor: 'pointer', borderRadius: '4px', fontWeight: 'bold' }}>Logout</button>
           ) : (
-             <Link to="/login" style={{ color: 'lightblue', textDecoration: 'none' }}>Login</Link>
+             <Link to="/login" style={{ color: 'lightblue', textDecoration: 'none', fontWeight: 'bold' }}>Login</Link>
           )}
         </div>
       </nav>

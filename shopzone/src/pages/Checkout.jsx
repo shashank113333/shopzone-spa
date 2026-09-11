@@ -1,103 +1,177 @@
-import { useState, useContext } from 'react';
-import { CartContext } from '../context/CartContext';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CartContext } from '../context/CartContext';
 
 function Checkout() {
   const { cart, clearCart } = useContext(CartContext);
-  const [isPaid, setIsPaid] = useState(false);
   const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    paymentMethod: 'cod'
+  });
+  const [isPaid, setIsPaid] = useState(false);
 
-  const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const totalAmount = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
 
-  const handlePayNow = (e) => {
+  const handlePay = (e) => {
     e.preventDefault();
-    clearCart(); 
+    if (!formData.name.trim() || !formData.address.trim()) {
+      alert('Please fill in your shipping details!');
+      return;
+    }
+    if (clearCart) clearCart();
     setIsPaid(true);
   };
-
-  const handleContinueShopping = () => {
-    navigate('/shop'); 
-  };
-
   if (isPaid) {
     return (
-      <div style={{ textAlign: 'center', padding: '50px 20px', maxWidth: '600px', margin: 'auto', background: '#222', borderRadius: '10px', marginTop: '40px', border: '1px solid #333' }}>
-        <h1 style={{ color: '#4ade80', fontSize: '36px', marginBottom: '15px' }}>🎉 Purchase Successful!</h1>
-        <p style={{ color: '#ccc', fontSize: '18px', lineHeight: '1.6' }}>
-          Thank you for your order! Your demo payment was processed successfully.
-        </p>
-        <p style={{ color: '#f59e0b', fontWeight: 'bold', marginTop: '10px' }}>
-          Order ID: #SZ-{Math.floor(100000 + Math.random() * 900000)}
+      <div style={{
+        maxWidth: '550px',
+        margin: '60px auto',
+        padding: '40px 30px',
+        textAlign: 'center',
+        background: '#ffffff',
+        borderRadius: '16px',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+      }}>
+        <div style={{ fontSize: '65px', marginBottom: '15px' }}>🎉</div>
+        <h2 style={{ color: '#27ae60', fontSize: '26px', marginBottom: '10px' }}>Order Placed Successfully!</h2>
+        <p style={{ color: '#555', fontSize: '16px', lineHeight: '1.6', marginBottom: '25px' }}>
+          Thank you, <strong>{formData.name}</strong>! Your order has been received and will be delivered soon.
         </p>
 
-        <div style={{ marginTop: '30px' }}>
-          <button 
-            onClick={handleContinueShopping}
-            style={{ 
-              background: '#f59e0b', 
-              color: '#000', 
-              padding: '12px 26px', 
-              border: 'none',
-              borderRadius: '6px', 
-              fontWeight: 'bold', 
-              fontSize: '16px',
-              cursor: 'pointer' 
-            }}
-          >
-            Continue Shopping 🛍️
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => navigate('/shop')}
+          style={{
+            padding: '12px 30px',
+            backgroundColor: '#007bff',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(0,123,255,0.25)'
+          }}
+        >
+          Continue Shopping 🛍️
+        </button>
       </div>
     );
   }
 
+  // 2. Agar Cart Empty hai
+  if (cart.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <h2 style={{ fontSize: '24px', color: '#333' }}>Your Cart is Empty! 🛒</h2>
+        <p style={{ color: '#666', margin: '15px 0' }}>Please add some items from the shop first.</p>
+        <button
+          type="button"
+          onClick={() => navigate('/shop')}
+          style={{
+            padding: '10px 24px',
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: '600'
+          }}
+        >
+          Go to Shop
+        </button>
+      </div>
+    );
+  }
+
+  // 3. Checkout Form
   return (
-    <div style={{ maxWidth: '600px', margin: 'auto', padding: '30px', background: '#222', borderRadius: '10px', color: '#fff', border: '1px solid #333' }}>
-      <h1 style={{ textAlign: 'center', color: '#f59e0b', marginBottom: '20px' }}>Checkout 💳</h1>
+    <div style={{
+      maxWidth: '650px',
+      margin: '40px auto',
+      padding: '30px',
+      background: '#fff',
+      borderRadius: '12px',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+    }}>
+      <h2 style={{ borderBottom: '2px solid #eee', paddingBottom: '12px', marginBottom: '20px', color: '#222' }}>
+        Checkout 💳
+      </h2>
       
-      <div style={{ marginBottom: '20px', padding: '15px', background: '#333', borderRadius: '8px' }}>
-        <h3 style={{ margin: '0 0 10px 0' }}>Order Summary</h3>
-        <p style={{ margin: '5px 0', color: '#aaa' }}>Total Items: {cart.reduce((sum, item) => sum + item.quantity, 0)}</p>
-        <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#4ade80' }}>
-          Total to Pay: ${totalPrice.toFixed(2)}
+      {/* Order Summary */}
+      <div style={{ marginBottom: '25px', background: '#f8f9fa', padding: '16px', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: '#444' }}>Order Summary</h4>
+        <p style={{ margin: '4px 0', color: '#555' }}>
+          Total Items: <strong>{cart.reduce((sum, item) => sum + (item.quantity || 1), 0)}</strong>
+        </p>
+        <p style={{ margin: '4px 0', fontSize: '18px', color: '#333' }}>
+          Total Amount: <strong style={{ color: '#e67e22' }}>${totalAmount.toFixed(2)}</strong>
         </p>
       </div>
 
-      <form onSubmit={handlePayNow} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <input 
-          type="text" 
-          placeholder="Full Name" 
-          required 
-          style={{ padding: '12px', borderRadius: '6px', border: '1px solid #444', background: '#111', color: '#fff' }} 
-        />
-        <input 
-          type="text" 
-          placeholder="Delivery Address" 
-          required 
-          style={{ padding: '12px', borderRadius: '6px', border: '1px solid #444', background: '#111', color: '#fff' }} 
-        />
-        <input 
-          type="text" 
-          placeholder="Card Number (Demo: 4242...)" 
-          required 
-          style={{ padding: '12px', borderRadius: '6px', border: '1px solid #444', background: '#111', color: '#fff' }} 
-        />
+      <form onSubmit={handlePay}>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#444' }}>
+            Full Name:
+          </label>
+          <input
+            type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="e.g. Shashank Vishwakarma"
+            style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
+        </div>
 
-        <button 
-          type="submit" 
-          style={{ 
-            background: '#16a34a', 
-            color: '#fff', 
-            padding: '14px', 
-            border: 'none', 
-            borderRadius: '6px', 
-            fontSize: '18px', 
-            fontWeight: 'bold', 
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#444' }}>
+            Delivery Address:
+          </label>
+          <textarea
+            required
+            rows="3"
+            value={formData.address}
+            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            placeholder="Enter your complete delivery address..."
+            style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', color: '#444' }}>
+            Payment Method:
+          </label>
+          <select
+            value={formData.paymentMethod}
+            onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+            style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #ccc' }}
+          >
+            <option value="cod">Cash on Delivery (COD)</option>
+            <option value="card">Credit / Debit Card</option>
+            <option value="upi">UPI / Net Banking</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '14px',
+            backgroundColor: '#28a745',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '17px',
+            fontWeight: 'bold',
             cursor: 'pointer',
-            marginTop: '10px'
+            boxShadow: '0 4px 12px rgba(40,167,69,0.3)'
           }}
         >
-          Pay Now (${totalPrice.toFixed(2)}) 🚀
+          Pay Now (${totalAmount.toFixed(2)}) 🚀
         </button>
       </form>
     </div>

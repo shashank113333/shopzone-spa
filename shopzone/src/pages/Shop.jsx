@@ -2,17 +2,36 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Shop() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState(() => {
+    const cached = sessionStorage.getItem('shop_products_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
+
+  const [loading, setLoading] = useState(() => {
+    return !sessionStorage.getItem('shop_products_cache');
+  });
 
   useEffect(() => {
+  
+    const cached = sessionStorage.getItem('shop_products_cache');
+    if (cached) {
+      setProducts(JSON.parse(cached));
+      setLoading(false);
+      return;
+    }
+
     fetch('https://dummyjson.com/products')
       .then((res) => res.json())
       .then((data) => {
-        setProducts(data.products); 
-        setLoading(false); 
+        sessionStorage.setItem('shop_products_cache', JSON.stringify(data.products));
+        setProducts(data.products);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+        setLoading(false);
       });
-  }, []); 
+  }, []);
 
   if (loading) {
     return <h2 style={{ textAlign: 'center', marginTop: '40px' }}>Loading products...</h2>;

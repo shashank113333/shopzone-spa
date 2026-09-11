@@ -7,7 +7,7 @@ function Cart() {
   const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+    <div style= {{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
       <h1>Your Shopping Cart</h1>
 
       {cart.length === 0 ? (

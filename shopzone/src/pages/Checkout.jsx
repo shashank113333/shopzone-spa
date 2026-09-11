@@ -1,18 +1,22 @@
 import { useState, useContext } from 'react';
 import { CartContext } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Checkout() {
-  const { cart } = useContext(CartContext);
+  const { cart, clearCart } = useContext(CartContext);
   const [isPaid, setIsPaid] = useState(false);
+  const navigate = useNavigate();
 
   const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   const handlePayNow = (e) => {
     e.preventDefault();
-  
-    localStorage.removeItem('shopzone_cart');
+    clearCart(); 
     setIsPaid(true);
+  };
+
+  const handleContinueShopping = () => {
+    navigate('/shop'); 
   };
 
   if (isPaid) {
@@ -27,25 +31,26 @@ function Checkout() {
         </p>
 
         <div style={{ marginTop: '30px' }}>
-          <Link 
-            to="/shop" 
-            onClick={() => window.location.reload()}
+          <button 
+            onClick={handleContinueShopping}
             style={{ 
               background: '#f59e0b', 
               color: '#000', 
-              padding: '12px 24px', 
-              textDecoration: 'none', 
+              padding: '12px 26px', 
+              border: 'none',
               borderRadius: '6px', 
               fontWeight: 'bold', 
-              fontSize: '16px' 
+              fontSize: '16px',
+              cursor: 'pointer' 
             }}
           >
             Continue Shopping 🛍️
-          </Link>
+          </button>
         </div>
       </div>
     );
   }
+
   return (
     <div style={{ maxWidth: '600px', margin: 'auto', padding: '30px', background: '#222', borderRadius: '10px', color: '#fff', border: '1px solid #333' }}>
       <h1 style={{ textAlign: 'center', color: '#f59e0b', marginBottom: '20px' }}>Checkout 💳</h1>

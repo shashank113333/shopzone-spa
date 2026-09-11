@@ -61,6 +61,12 @@ export function CartProvider({ children }) {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
+
+  const clearCart = () => {
+    localStorage.removeItem('shopzone_cart');
+    setCart([]);
+  };
+
   return (
     <CartContext.Provider value={{ 
       cart, 
@@ -68,6 +74,7 @@ export function CartProvider({ children }) {
       increaseQuantity, 
       decreaseQuantity, 
       removeFromCart,
+      clearCart,
       isLoggedIn,
       login,
       logout

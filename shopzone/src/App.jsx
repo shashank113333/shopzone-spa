@@ -26,20 +26,34 @@ function App() {
 
   return (
     <BrowserRouter>
-      <nav style={{ padding: '20px', background: '#333', color: 'white', display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
-        <Link to="/shop" style={{ color: 'white', textDecoration: 'none' }}>Shop</Link>
-        <Link to="/contact" style={{ color: 'white', textDecoration: 'none' }}>Contact</Link>
-        
-        <Link to="/cart" style={{ color: 'orange', textDecoration: 'none', marginLeft: 'auto', fontWeight: 'bold' }}>
-          🛒 Cart ({cart.length})
-        </Link>
 
-        {localStorage.getItem('isLoggedIn') === 'true' ? (
-           <button onClick={handleLogout} style={{ background: 'red', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px', marginLeft: '15px' }}>Logout</button>
-        ) : (
-           <Link to="/login" style={{ color: 'lightblue', textDecoration: 'none', marginLeft: '15px' }}>Login</Link>
-        )}
+      <nav style={{ 
+        padding: '12px 20px', 
+        background: '#333', 
+        color: 'white', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Home</Link>
+          <Link to="/shop" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Shop</Link>
+          <Link to="/contact" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Contact</Link>
+        </div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <Link to="/cart" style={{ color: 'orange', textDecoration: 'none', fontWeight: 'bold' }}>
+            🛒 Cart ({cart.length})
+          </Link>
+
+          {localStorage.getItem('isLoggedIn') === 'true' ? (
+             <button onClick={handleLogout} style={{ background: 'red', color: 'white', border: 'none', padding: '6px 12px', cursor: 'pointer', borderRadius: '4px' }}>Logout</button>
+          ) : (
+             <Link to="/login" style={{ color: 'lightblue', textDecoration: 'none' }}>Login</Link>
+          )}
+        </div>
       </nav>
 
       <div style={{ padding: '20px' }}>

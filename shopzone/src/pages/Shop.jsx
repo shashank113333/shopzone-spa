@@ -15,21 +15,58 @@ function Shop() {
   }, []); 
 
   if (loading) {
-    return <h2>Loading products...</h2>;
+    return <h2 style={{ textAlign: 'center', marginTop: '40px' }}>Loading products...</h2>;
   }
 
   return (
-    <div>
-      <h1>Our Products</h1>
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Our Products</h1>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
         
         {products.map((product) => (
-          <div key={product.id} className="product-card" style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', background: '#222' }}>
-            <img src={product.thumbnail} alt={product.title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-            <h3>{product.title}</h3>
-            <p>Price: ${product.price}</p>
-            <Link to={`/product/${product.id}`} style={{ background: 'white', color: 'black', padding: '8px 12px', textDecoration: 'none', borderRadius: '4px', display: 'inline-block' }}>
+          <div 
+            key={product.id} 
+            className="product-card" 
+            style={{ 
+              border: '1px solid #333', 
+              padding: '15px', 
+              borderRadius: '8px', 
+              background: '#222',
+              color: '#fff',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}
+          >
+            <div>
+              <img 
+                src={product.thumbnail} 
+                alt={product.title} 
+                loading="lazy"
+                width="250"
+                height="200"
+                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }} 
+              />
+              <h3 style={{ marginTop: '12px', fontSize: '18px' }}>{product.title}</h3>
+              <p style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '16px' }}>Price: ${product.price}</p>
+            </div>
+
+            <Link 
+              to={`/product/${product.id}`} 
+              aria-label={`View details for ${product.title}`}
+              style={{ 
+                background: '#ffffff', 
+                color: '#000000', 
+                padding: '10px 14px', 
+                textDecoration: 'none', 
+                borderRadius: '6px', 
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginTop: '15px',
+                display: 'block' 
+              }}
+            >
               View Details
             </Link>
           </div>

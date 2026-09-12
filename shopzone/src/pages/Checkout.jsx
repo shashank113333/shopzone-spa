@@ -61,8 +61,6 @@ function Checkout() {
       </div>
     );
   }
-
-  // 2. Agar Cart Empty hai
   if (cart.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -87,7 +85,6 @@ function Checkout() {
     );
   }
 
-  // 3. Checkout Form
   return (
     <div style={{
       maxWidth: '650px',
@@ -100,8 +97,6 @@ function Checkout() {
       <h2 style={{ borderBottom: '2px solid #eee', paddingBottom: '12px', marginBottom: '20px', color: '#222' }}>
         Checkout 💳
       </h2>
-      
-      {/* Order Summary */}
       <div style={{ marginBottom: '25px', background: '#f8f9fa', padding: '16px', borderRadius: '8px', border: '1px solid #e9ecef' }}>
         <h4 style={{ margin: '0 0 10px 0', color: '#444' }}>Order Summary</h4>
         <p style={{ margin: '4px 0', color: '#555' }}>
